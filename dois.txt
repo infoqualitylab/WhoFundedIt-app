@@ -1,0 +1,14 @@
+10.1145/2566486.2568023
+10.1145/2038633.2038636
+https://doi.org/10.1145/3579609
+https://doi.org/10.1016/j.ijhydene.2018.01.169 
+https://doi.org/10.1109/tcad.2022.3197342 
+https://doi.org/10.1177/13548565221079459 
+https://doi.org/10.1109/tpds.2014.2365192 
+https://doi.org/10.1109/qce53715.2022.00065 
+https://doi.org/10.1016/j.optcom.2016.01.037 
+https://doi.org/10.1016/j.compscitech.2016.07.012 
+https://doi.org/10.1109/iros47612.2022.9982082 
+https://doi.org/10.1145/3544548.3581516
+https://doi.org/10.1145/3469885
+10.14454/qn00-qx85

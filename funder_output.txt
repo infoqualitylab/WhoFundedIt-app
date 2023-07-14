@@ -1,0 +1,157 @@
+Funder information for publication with DOI: 10.1145/2566486.2568023
+Funder Name: Computing Research Association
+Grant IDs: ['104672']
+
+Funder Name: Google
+Grant IDs: None
+
+Funder Name: Max Planck Center for Visual Computing and Communications
+Grant IDs: None
+
+Funder Name: U.S. Department of Defense : U.S. Air Force : Air Force Materiel Command : Air Force Office of Scientific Research
+Grant IDs: ['FA9550-12-1-0372']
+
+Funder Name: National Science Foundation : Directorate for Mathematical and Physical Sciences : Division of Mathematical Sciences
+Grant IDs: ['CCF 1011228 and DMS 1228304']
+
+Funder Name: National Science Foundation : Directorate for Computer and Information Science and Engineering : Division of Computing and Communication Foundations
+Grant IDs: ['CCF 1011228 and DMS 1228304']
+
+Funder Name: National Science Foundation
+Grant IDs: None
+
+---
+Funder information for publication with DOI: 10.1145/2038633.2038636
+Funder Name: National Science Foundation : Directorate for Computer and Information Science and Engineering : Division of Computer and Network Systems
+Grant IDs: ['CNS-0963754']
+
+Funder Name: Computing Research Association
+Grant IDs: ['937060']
+
+---
+Funder information for publication with DOI: https://doi.org/10.1145/3579609
+Funder Name: Computing Research Association
+Grant IDs: ['2127309,2030859']
+
+Funder Name: National Science Foundation
+Grant IDs: ['DGE-1656518']
+
+---
+Funder information for publication with DOI: https://doi.org/10.1016/j.ijhydene.2018.01.169 
+Funder Name: Computing Research Association
+Grant IDs: ['W911NF-11-R-0001', 'DPI2015-66534-R']
+
+Funder Name: Virginia Polytechnic Institute and State University : Institute for Critical Technologies and Applied Science, Virginia Tech
+Grant IDs: ['W911NF-11-R-0001', 'DPI2015-66534-R']
+
+Funder Name: Ministerio de Econom¨ªa y Competitividad
+Grant IDs: ['W911NF-11-R-0001', 'DPI2015-66534-R']
+
+Funder Name: U.S. Department of Defense : U.S. Army : U.S. Army Medical Command : U.S. Army Aeromedical Research Laboratory
+Grant IDs: ['W911NF-11-R-0001', 'DPI2015-66534-R']
+
+Funder Name: Virginia Polytechnic Institute and State University
+Grant IDs: ['W911NF-11-R-0001', 'DPI2015-66534-R']
+
+---
+Funder information for publication with DOI: https://doi.org/10.1109/tcad.2022.3197342 
+Funder Name: National Science Foundation
+Grant IDs: ['CNS-1955353', 'CNS-1955196']
+
+Funder Name: Computing Research Association
+Grant IDs: ['2030859']
+
+---
+Funder information for publication with DOI: https://doi.org/10.1177/13548565221079459 
+Funder Name: U.S. Department of Health and Human Services : National Institutes of Health
+Grant IDs: ['1F31DC016804-01A1']
+
+Funder Name: Computing Research Association
+Grant IDs: ['CIF2020-CMU-02']
+
+---
+Funder information for publication with DOI: https://doi.org/10.1109/tpds.2014.2365192 
+Funder Name: U.S. Department of Energy : National Nuclear Security Administration : Laboratory Directed Research and Development : Lawrence Livermore National Laboratory
+Grant IDs: None
+
+Funder Name: U.S. Department of Energy : Office of Science
+Grant IDs: ['DE-AC52-07NA27344']
+
+Funder Name: Computing Research Association
+Grant IDs: ['LLNL-JRNL-662817']
+
+Funder Name: U.S. Department of Defense : U.S. Air Force : Air Force Materiel Command : Air Force Office of Scientific Research
+Grant IDs: None
+
+Funder Name: Computational Mathematics Program
+Grant IDs: ['FA9550-12-1-0442']
+
+Funder Name: National Science Foundation
+Grant IDs: ['I/UCRC IIP-1266245']
+
+Funder Name: NSF Center for High-Performance Reconfigurable Computing
+Grant IDs: None
+
+Funder Name: U.S. Department of Defense
+Grant IDs: None
+
+---
+Funder information for publication with DOI: https://doi.org/10.1109/qce53715.2022.00065 
+Funder Name: Computing Research Association
+Grant IDs: None
+
+---
+Funder information for publication with DOI: https://doi.org/10.1016/j.optcom.2016.01.037 
+Funder Name: Florida International University
+Grant IDs: ['0955013']
+
+Funder Name: Duke University : Graduate School, Duke University
+Grant IDs: ['0955013']
+
+Funder Name: U.S. Department of Defense : U.S. Army : Research, Development and Engineering Command : Army Research Laboratory
+Grant IDs: ['0955013']
+
+Funder Name: Computing Research Association
+Grant IDs: ['0955013']
+
+Funder Name: National Science Foundation
+Grant IDs: ['0955013']
+
+---
+Funder information for publication with DOI: https://doi.org/10.1016/j.compscitech.2016.07.012 
+Funder Name: U.S. Department of Commerce : National Institute of Standards and Technology
+Grant IDs: None
+
+Funder Name: Cooperative Research Agreement
+Grant IDs: ['70NANB10H193']
+
+Funder Name: Computing Research Association
+Grant IDs: ['70NANB12H188']
+
+Funder Name: U.S. Department of Defense : U.S. Air Force : Air Force Materiel Command : Air Force Office of Scientific Research
+Grant IDs: ['MIPR F4FGA04094G002']
+
+---
+Funder information for publication with DOI: https://doi.org/10.1109/iros47612.2022.9982082 
+Funder Name: Xilinx
+Grant IDs: None
+
+Funder Name: National Science Foundation
+Grant IDs: ['2030859']
+
+Funder Name: Computing Research Association
+Grant IDs: None
+
+---
+Funder information for publication with DOI: https://doi.org/10.1145/3544548.3581516
+No funder information found for publication with DOI: https://doi.org/10.1145/3544548.3581516
+---
+Funder information for publication with DOI: https://doi.org/10.1145/3469885
+No funder information found for publication with DOI: https://doi.org/10.1145/3469885
+---
+Funder information for publication with DOI: 10.14454/qn00-qx85
+No funder information found for publication with DOI: 10.14454/qn00-qx85
+---
+Total execution time:52.272518 sesconds
+Request per second: 0.2678271591967313
+Success rate: 78.57%
