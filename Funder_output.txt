@@ -1,0 +1,50 @@
+Funder information for publication with DOI: 10.1145/2566486.2568023
+Funder Name: Computing Research Association
+Grant IDs: ['104672']
+
+Funder Name: Google
+Grant IDs: None
+
+Funder Name: Max Planck Center for Visual Computing and Communications
+Grant IDs: None
+
+Funder Name: U.S. Department of Defense : U.S. Air Force : Air Force Materiel Command : Air Force Office of Scientific Research
+Grant IDs: ['FA9550-12-1-0372']
+
+Funder Name: National Science Foundation : Directorate for Mathematical and Physical Sciences : Division of Mathematical Sciences
+Grant IDs: ['CCF 1011228 and DMS 1228304']
+
+Funder Name: National Science Foundation : Directorate for Computer and Information Science and Engineering : Division of Computing and Communication Foundations
+Grant IDs: ['CCF 1011228 and DMS 1228304']
+
+Funder Name: National Science Foundation
+Grant IDs: None
+
+---
+Funder information for publication with DOI: https://doi.org/10.1145/3579609
+Funder Name: Computing Research Association
+Grant IDs: ['2127309,2030859']
+
+Funder Name: National Science Foundation
+Grant IDs: ['DGE-1656518']
+
+---
+Funder information for publication with DOI: https://10.1109/tcad.2022.3197342
+Funder Name: National Science Foundation
+Grant IDs: ['CNS-1955353', 'CNS-1955196']
+
+Funder Name: Computing Research Association
+Grant IDs: ['2030859']
+
+---
+Funder information for publication with DOI: http://doi.org/10.1177/13548565221079459 
+Funder Name: U.S. Department of Health and Human Services : National Institutes of Health
+Grant IDs: ['1F31DC016804-01A1']
+
+Funder Name: Computing Research Association
+Grant IDs: ['CIF2020-CMU-02']
+
+---
+Total execution time:17.879745 seconds 
+Request per second: 0.22371683712491425
+Success rate: 100.00%
