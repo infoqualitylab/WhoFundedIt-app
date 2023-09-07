@@ -21,7 +21,7 @@ Funder Name: National Science Foundation
 Grant IDs: None
 
 ---
-Funder information for publication with DOI: https://doi.org/10.1145/3579609
+Funder information for publication with DOI: http://dx.doi.org/10.1145/3579609
 Funder Name: Computing Research Association
 Grant IDs: ['2127309,2030859']
 
@@ -29,7 +29,15 @@ Funder Name: National Science Foundation
 Grant IDs: ['DGE-1656518']
 
 ---
-Funder information for publication with DOI: https://10.1109/tcad.2022.3197342
+Funder information for publication with DOI: https://dx.doi.org/10.1145/3579609
+Funder Name: Computing Research Association
+Grant IDs: ['2127309,2030859']
+
+Funder Name: National Science Foundation
+Grant IDs: ['DGE-1656518']
+
+---
+Funder information for publication with DOI: https://doi.org/10.1109/tcad.2022.3197342
 Funder Name: National Science Foundation
 Grant IDs: ['CNS-1955353', 'CNS-1955196']
 
@@ -45,6 +53,6 @@ Funder Name: Computing Research Association
 Grant IDs: ['CIF2020-CMU-02']
 
 ---
-Total execution time:17.879745 seconds 
-Request per second: 0.22371683712491425
+Total execution time:19.919942 seconds 
+Request per second: 0.25100474690137153
 Success rate: 100.00%
