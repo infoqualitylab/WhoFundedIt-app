@@ -6,7 +6,7 @@ This Python file retrieves funder names and grant IDs for a list of publications
 ## Setup
 Follow these steps to set up the code
 1. Install required packages listed in requirements.txt into your environment
-3. Open folder in Visual Studio Code
+3. Open folder in Visual Studio Code (currently using the November 2024 version 1.96)
 4. Run app.py
 
 ## Contributors
