@@ -5,13 +5,10 @@ This Python file retrieves funder names and grant IDs for a list of publications
 
 ## Setup
 Follow these steps to set up the code
-1. Install the proper version of Python in your environment
-- Python 3.x
-2. Install the required libraries in your environment. This includes:
-- requests library (pip install requests)
-3. Ensure dois.txt file and retrieveFunderData.py are in the same folder
-4. Run the code
+1. Install required packages listed in requirements.txt into your environment
+3. Open folder in Visual Studio Code
+4. Run app.py
 
 ## Contributors
 - Deyuan Yang (@Doreenyang) drafted initial code for the app
-- Corinne McCumber (@corinnemc) refactored code to address speed issues and update layout
+- Corinne McCumber (@corinnemc) refactored code to address speed issues and updated layout
