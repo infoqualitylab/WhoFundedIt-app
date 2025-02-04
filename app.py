@@ -167,9 +167,13 @@ def server(input, output, session):
     @render.text
     def funder_count_dictionary():
         if processed_funders_from_doi_file()['funders_count'] != 0:
-            return f"{processed_funders_from_doi_file()['funders_count']}"
+            count = processed_funders_from_doi_file()['funders_count']
+            sorted_count = {key: value for key, value in sorted(count.items(), key=lambda item: item[1], reverse=True)}
+            return f"{sorted_count}"
         if processed_funders_from_single_doi()['count'] != 0:
-            return f"{processed_funders_from_single_doi()['count']}"
+            count = processed_funders_from_single_doi()['count']
+            sorted_count = {key: value for key, value in sorted(count.items(), key=lambda item: item[1], reverse=True)}
+            return f"{sorted_count}"
         else:
             return "No funder count dictionary generated."
 
