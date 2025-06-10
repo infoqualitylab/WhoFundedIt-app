@@ -61,7 +61,7 @@ def server(input, output, session):
     @output
     @render.text
     def app_query_no_funders():
-        return f"Items with no funder: {app_query()["identifier_with_no_funder_list"]}"
+        return f"Items with no funder: {app_query()['identifier_with_no_funder_list']}"
 
     @output
     @render.table(index=True)
@@ -79,11 +79,11 @@ def server(input, output, session):
     @output
     @render.text
     def app_query_result():
-        return (f"Most-specific (bottom-level) funders dictionary: {app_query()["bottom_level_funder_dictionary"]} \n"
-                f"Complete chain of funders: {app_query()["nested_detailed_funder_dictionary"]} \n"
+        return (f"Most-specific (bottom-level) funders dictionary: {app_query()['bottom_level_funder_dictionary']} \n"
+                f"Complete chain of funders: {app_query()['nested_detailed_funder_dictionary']} \n"
                 f"Funding body type(s): {app_query()['nested_funding_body_type_dictionary']} \n"
                 f"Funder countries: {app_query()['nested_countries_dictionary']} \n"
-                f"Grants by funder: {app_query()["nested_grant_dictionary"]} \n"
+                f"Grants by funder: {app_query()['nested_grant_dictionary']} \n"
                 )
 
     @output
