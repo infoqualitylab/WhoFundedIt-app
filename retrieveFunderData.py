@@ -87,6 +87,6 @@ def process_dois(doi_file, output_file):
 
 
 # Example 
-doi_file = "dois.txt"
+doi_file = "data/dois.txt"
 output_file = "funder_output.txt"
 process_dois(doi_file, output_file)
