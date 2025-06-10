@@ -61,7 +61,7 @@ def server(input, output, session):
     @output
     @render.text
     def app_query_no_funders():
-        return (f"Items with no funder: {app_query()["identifier_with_no_funder_list"]}")
+        return f"Items with no funder: {app_query()["identifier_with_no_funder_list"]}"
 
     @output
     @render.table(index=True)
