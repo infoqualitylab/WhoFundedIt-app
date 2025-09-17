@@ -1,4 +1,4 @@
-# Example use of the Computable Bibliography
+# Example use of WhoFundedIt
 
 The following images were generated using the WhoFundedIt app. 
 <a id="raw-url" href="https://raw.githubusercontent.com/infoqualitylab/WhoFundedIt-app/refs/heads/main/data/COVID-WFI-example.txt"> Download the DOI file used for generation</a>;
