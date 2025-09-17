@@ -1,4 +1,4 @@
-# How to use the Computable Bibliography
+# How to use WhoFundedIt
 ### What this application does:
 This application queries [Crossref](https://www.crossref.org/) or [ClinicalTrials.gov](https://www.clinicaltrials.gov) for funder/sponsor information tied to a given list of Digital Object Indentifiers (DOIs) or National Clinical Trial Identification Numbers (NCTIDs) for different publications. It then returns table and text versions of the information retrieved and visualizations comparing the publications in aggregate. 
 
