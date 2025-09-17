@@ -2,7 +2,8 @@
 
 ## Description
 This app retrieves funder names and other funder information (grant, country, funding body type) for a list of 
-publications based on their Digital Object Identifiers (DOIs) using the Crossref API. 
+publications based on their Digital Object Identifiers (DOIs) using the Crossref API. It also retrieves sponsor name and class
+for a list of publications based on their National Clinical Trial Identifiers (NCTIDs) using the ClinicalTrials.gov API.
 The input can be either a text box entry or a .txt file. 
 
 ## Setup
@@ -14,3 +15,4 @@ Follow these steps to set up the code
 ## Contributors
 - Deyuan Yang (@Doreenyang) drafted initial code for the app
 - Corinne McCumber (@corinnemc) refactored code to address speed issues, updated layout, and deployed app.
+- Colby Vorland provided base code that was refactored to query ClinicalTrials.gov
