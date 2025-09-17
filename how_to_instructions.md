@@ -3,17 +3,14 @@
 This application queries [Crossref](https://www.crossref.org/) or [ClinicalTrials.gov](https://www.clinicaltrials.gov) for funder/sponsor information tied to a given list of Digital Object Indentifiers (DOIs) or National Clinical Trial Identification Numbers (NCTIDs) for different publications. It then returns table and text versions of the information retrieved and visualizations comparing the publications in aggregate. 
 
 ##### When querying Crossref:
-Specifically it uses the Crossref [Work object](https://api.crossref.org/swagger-ui/index.html#/Works/get_works__doi_),
-parsing JSON files for each publication queried.
 
-See Crossref documentation for more details: [Non-technical overview](https://www.crossref.org/documentation/retrieve-metadata/rest-api/) 
-and [detailed documentation](https://api.crossref.org/swagger-ui/index.html#/), scroll down to Models > Work to see specific attributes
+Specifically it uses the Crossref [Work object](https://api.crossref.org/swagger-ui/index.html#/Works/get_works__doi_),
+parsing JSON files for each publication queried. See Crossref documentation for more details: [Non-technical overview](https://www.crossref.org/documentation/retrieve-metadata/rest-api/) and [detailed documentation](https://api.crossref.org/swagger-ui/index.html#/), scroll down to Models > Work to see specific attributes
 
 ##### When querying <span>ClinicalTrials.gov</span>:
-Specifically it uses the <span>ClinicalTrials.gov</span> [Sponsor/Collaborator module](https://clinicaltrials.gov/policy/protocol-definitions#Sponsors), parsing JSON files for each publication queried. Please note, <span>ClinicalTrials.gov</span> [defines a sponsor](https://clinicaltrials.gov/study-basics/glossary#sponsor) as "The organization or person who initiates the study and who has authority and control over the study" and [a
-collaborator](https://clinicaltrials.gov/study-basics/glossary#collaborator) as "An organization other than the sponsor that provides support for a clinical study. This support may include activities related to funding, design, implementation, data analysis, or reporting."
 
-See <span>ClinicalTrials.gov</span> documentation for more details: https://clinicaltrials.gov/data-api/api. Class definitions can be found under [AgencyClass](https://clinicaltrials.gov/data-api/about-api/study-data-structure#enum-AgencyClass)
+Specifically it uses the <span>ClinicalTrials.gov</span> [Sponsor/Collaborator module](https://clinicaltrials.gov/policy/protocol-definitions#Sponsors), parsing JSON files for each publication queried. Please note, <span>ClinicalTrials.gov</span> [defines a sponsor](https://clinicaltrials.gov/study-basics/glossary#sponsor) as "The organization or person who initiates the study and who has authority and control over the study" and [a
+collaborator](https://clinicaltrials.gov/study-basics/glossary#collaborator) as "An organization other than the sponsor that provides support for a clinical study. This support may include activities related to funding, design, implementation, data analysis, or reporting." See <span>ClinicalTrials.gov</span> documentation for more details: https://clinicaltrials.gov/data-api/api. Class definitions can be found under [AgencyClass](https://clinicaltrials.gov/data-api/about-api/study-data-structure#enum-AgencyClass)
 <hr style="border:2px solid gray">
 
 ### How to use this application:
@@ -27,7 +24,6 @@ See <span>ClinicalTrials.gov</span> documentation for more details: https://clin
     - doi:10.XXXX/XXXX
     - 10.XXXX/XXXX
   - NCTIDs can be in any of the following formats:
-
     - NCT######## 
     - nct########
   - The app will ignore blank/empty lines. 
@@ -39,8 +35,7 @@ In a citation manager such as [Zotero](https://www.zotero.org/), you can create 
 (Windows) or [TextEdit](https://support.apple.com/guide/textedit/welcome/mac) (Mac).
 4. Saving the resulting file. Blank lines do not need to be removed.
   
-You can also manually copy and paste identifiers into a text file using text editor such as [Notepad](https://apps.microsoft.com/detail/9msmlrh6lzf3?hl=en-us&gl=US) 
-(Windows) or [TextEdit](https://support.apple.com/guide/textedit/welcome/mac) (Mac). 
+You can also manually copy and paste identifiers into a text file using text editor such as [Notepad](https://apps.microsoft.com/detail/9msmlrh6lzf3?hl=en-us&gl=US) (Windows) or [TextEdit](https://support.apple.com/guide/textedit/welcome/mac) (Mac). 
 
 ---
 
