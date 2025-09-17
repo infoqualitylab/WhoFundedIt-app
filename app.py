@@ -13,84 +13,233 @@ def ui_card(title, *args):
     )
 
 
-home_page = ui.page_fluid(
+crossref_page = ui.page_fluid(
     ui.markdown(
         """
-        ### What this application does:
-          This application queries [Crossref](https://www.crossref.org/) for funder information tied to a given list of
-          Digital Object Indentifiers (DOIs) for different publications. It then returns table and text versions of the information
-          retrieved and visualizations comparing the publications in aggregate. See the "How to use this app" and "Example usage" 
-          pages for more information.
+        # Querying Crossref
+        ### What this page does:
+          This page queries [Crossref](https://www.crossref.org/) 
+          for funder information tied to a given list of identifiers for different publications.
+          It then returns table and text versions of the information retrieved and visualizations comparing the 
+          publications in aggregate. See the "How to use this app" and "Example usage" pages for more information.
         """
     ),
 
     ui.panel_well(
-        ui.h3("Test a single DOI:"),
+        ui.h3("Test a single Digital Object Identifier (DOI):"),
         ui.input_text_area("single_doi",
                            "DOI in format https://doi.org/10.XXXX/XXXX or 10.XXXX/XXXX",
-                           placeholder="Enter DOI here"),
+                           placeholder="Enter DOI here",
+                           value="10.1145/2566486.2568023"),
     ),
 
     ui.panel_well(
         ui.h3("Upload a DOI file:"),
 
-        ui.input_file("user_file", "Choose a file to upload:", multiple=False),
-        ui.input_radio_buttons("type", "Type:", ["Text", "Other"]),
+        ui.input_file("crossref_user_file", "Choose a file to upload:", multiple=False),
+        ui.input_radio_buttons("crossref_type", "Type:", ["Text", "Other"]),
     ),
 
     ui.panel_well(
         ui.h3("Input data"),
-        ui.output_text_verbatim("app_clean_input_list"),
+        ui.output_text_verbatim("app_crossref_clean_input_list"),
         ui.h3("Query Crossref"),
-        ui.input_action_button("query_button", "Query Crossref")
+        ui.input_action_button("query_crossref_button",
+                               "Query Crossref",
+                               width='100%',
+                               class_="btn-success",)
     ),
 
     ui.panel_well(
-        ui.h3("Query results"),
-
-        ui_card(
-            ui.h4("Work identifiers with errors:"),
-            ui.output_text_verbatim("app_query_errors")
-        ),
-
-        ui_card(
-            ui.h4("Work identifiers without listed funders:"),
-            ui.output_text_verbatim(f"app_query_no_funders")
-        ),
-
-        ui_card(
-            ui.h4("Funder information in table form:"),
-            ui.output_table("summary_table")
-        ),
-
-        ui_card(
-            ui.h4("Nested dictionaries\n"),
-            ui.markdown(
-                """
-                ##### Format:
-                ```
-                {'Work DOI 1': [
-                       {'Funder DOI 1': 'specific funder information'},
-                       {'Funder DOI 2': 'specific funder information'}
-                       ],
-                  'Work DOI 2': [...]
-                 }
-                ```
-                """
+        ui.h3("Results"),
+        ui.p('If Crossref metadata is inaccurate or incomplete, the visualizations, tables, and '
+             'text returned will also be inaccurate. Please also note that discrepancies in how funders are listed '
+             'can result in different totals for the tables and the plots.'),
+        ui.navset_card_tab(
+            ui.nav_panel("Item-to-funder table",
+                ui_card(
+                    ui.h4("Item-to-funder table:"),
+                    ui.output_table("crossref_item_to_funder_table"),
+                ),
             ),
-            ui.output_text_verbatim("app_query_result")
+
+            ui.nav_spacer(),
+
+            ui.nav_panel("Funder-to-item table",
+                ui_card(
+                    ui.h4("Summary funder-to-item table:"),
+                    ui.output_table("crossref_summary_funder_to_item_table")
+                ),
+
+                ui_card(
+                    ui.h4("Detailed funder-to-item table:"),
+                    ui.output_table("crossref_detailed_funder_to_item_table")
+                )
+            ),
+
+            ui.nav_spacer(),
+
+            ui.nav_panel("Plots",
+                ui.panel_well(
+                    ui.h3("Plots"),
+                    ui.output_plot("crossref_funder_name", height='90vh', width='90vw'),
+                    ui.output_plot("crossref_funder_name_pie", height='90vh', width='90vw'),
+                    ui.output_plot("crossref_funding_body_type", height='90vh', width='90vw'),
+                    ui.output_plot("crossref_funding_body_type_pie", height='90vh', width='90vw'),
+                    ui.output_plot("crossref_country", height='90vh', width='90vw'),
+                    ui.output_plot("crossref_country_pie", height='90vh', width='90vw'),
+                ),
+            ),
+
+            ui.nav_spacer(),
+
+            ui.nav_panel("Query results and errors",
+                         ui.h3("Query results and errors"),
+
+                         ui_card(
+                             ui.h4("Work identifiers with errors:"),
+                             ui.output_text_verbatim("app_query_crossref_errors")
+                         ),
+
+                         ui_card(
+                             ui.h4("Work identifiers without listed funders:"),
+                             ui.output_text_verbatim(f"app_query_crossref_no_funders")
+                         ),
+
+                         ui_card(
+                             ui.h4("Nested dictionaries\n"),
+                             ui.markdown(
+                                 """
+                                 ##### Format:
+                                 ```
+                                   {'Work DOI 1': [
+                                       {'Funder DOI 1': 'specific funder information'},
+                                       {'Funder DOI 2': 'specific funder information'}
+                                       ],
+                                   'Work DOI 2': [...]
+                                     }
+                                ```
+                                """
+                             ),
+                             ui.output_text_verbatim("app_query_crossref_result")
+                         ),
+                         ),
+
         ),
+        id="tab",
+    )
+)
+
+clinicaltrials_page = ui.page_fluid(
+    ui.markdown(
+        """
+        # Querying <span>ClinicalTrials.gov</span>
+        ### What this page does:
+          This page queries [ClinicalTrials.gov](https://www.clinicaltrials.gov/) 
+          for sponsor and collaborator information tied to a given list of identifiers for different publications.
+          It then returns table and text versions of the information retrieved and visualizations comparing the 
+          publications in aggregate. See the "How to use this app" and "Example usage" pages for more information.
+          Please note that code to query ClinicalTrials.gov was initially developed by Colby Vorland.
+        """
     ),
 
     ui.panel_well(
-        ui.h3("Plots"),
-        ui.output_plot("funder_name", height='90vh', width='90vw'),
-        ui.output_plot("funder_name_pie", height='90vh', width='90vw'),
-        ui.output_plot("funding_body_type", height='90vh', width='90vw'),
-        ui.output_plot("funding_body_type_pie", height='90vh', width='90vw'),
-        ui.output_plot("country", height='90vh', width='90vw'),
-        ui.output_plot("country_pie", height='90vh', width='90vw'),
+        ui.h3("Test a single National Clinical Trial Identification Number (NCTID):"),
+        ui.input_text_area("single_nctid",
+                           "NCTID in format NCT######## or nct########",
+                           placeholder="Enter NCTID here",
+                           value="NCT06745908"),
     ),
+
+    ui.panel_well(
+        ui.h3("Upload a NCTID file:"),
+
+        ui.input_file("clinicaltrials_user_file", "Choose a file to upload:", multiple=False),
+        ui.input_radio_buttons("clinicaltrials_type", "Type:", ["Text", "Other"]),
+    ),
+
+    ui.panel_well(
+        ui.h3("Input data"),
+        ui.output_text_verbatim("app_clinicaltrials_clean_input_list"),
+        ui.h3("Query ClinicalTrials.gov"),
+        ui.input_action_button("query_clinicaltrials_button",
+                               "Query ClinicalTrials.gov",
+                               width='100%',
+                               class_="btn-success", )
+    ),
+
+    ui.panel_well(
+        ui.h3("Results"),
+        ui.p('If ClinicalTrials.gov metadata is inaccurate or incomplete, the visualizations, tables, and '
+             'text returned will also be inaccurate.'),
+        ui.navset_card_tab(
+            ui.nav_panel("Item-to-funder table",
+                ui_card(
+                    ui.h4("Item-to-funder table:"),
+                    ui.output_table("clinicaltrials_item_to_funder_table"),
+                ),
+            ),
+
+            ui.nav_spacer(),
+
+            # ui.nav_panel("Funder-to-item table",
+            #     ui_card(
+            #         ui.h4("Summary funder-to-item table:"),
+            #         ui.output_table("clinicaltrials_summary_funder_to_item_table")
+            #     ),
+            #
+            #     ui_card(
+            #         ui.h4("Detailed funder-to-item table:"),
+            #         ui.output_table("clinicaltrials_detailed_funder_to_item_table")
+            #     )
+            # ),
+            #
+            # ui.nav_spacer(),
+
+            ui.nav_panel("Plots",
+                ui.panel_well(
+                    ui.h3("Plots"),
+                    ui.output_plot("clinicaltrials_sponsor_name", height='90vh', width='90vw'),
+                    ui.output_plot("clinicaltrials_sponsor_name_pie", height='90vh', width='90vw'),
+                    ui.output_plot("clinicaltrials_sponsor_class", height='90vh', width='90vw'),
+                    ui.output_plot("clinicaltrials_sponsor_class_pie", height='90vh', width='90vw'),
+            ),
+        ),
+
+            ui.nav_spacer(),
+
+            ui.nav_panel("Query results and errors",
+                         ui.h3("Query results and errors"),
+
+                         ui_card(
+                             ui.h4("Work identifiers with errors:"),
+                             ui.output_text_verbatim("app_query_clinicaltrials_errors")
+                         ),
+
+                         ui_card(
+                             ui.h4("Work identifiers without listed funders:"),
+                             ui.output_text_verbatim(f"app_query_clinicaltrials_no_funders")
+                         ),
+
+                         ui_card(
+                             ui.h4("Results dictionaries\n"),
+                             ui.markdown(
+                                 """
+                                 ##### Format:
+                                 ```
+                                   {'Work NCTID 1': [specific sponsor information],
+                                   'Work NCTID 2': [...]
+                                     }
+                                ```
+                                """
+                             ),
+                             ui.output_text_verbatim("app_query_clinicaltrials_result")
+                         ),
+                         ),
+
+        ),
+        id="tab",
+    )
 )
 
 with open('how_to_instructions.md', 'r') as file:
@@ -107,7 +256,8 @@ example_page = ui.page_fluid(
 
 app_ui = ui.page_navbar(
     ui.nav_spacer(),
-    ui.nav_panel("Home", home_page),
+    ui.nav_panel("Query Crossref", crossref_page),
+    ui.nav_panel("Query ClinicalTrials.gov", clinicaltrials_page),
     ui.nav_panel("How to use this app", how_to_page),
     ui.nav_panel("Example usage", example_page),
     title=ui.TagList(
@@ -116,63 +266,5 @@ app_ui = ui.page_navbar(
         ),
     window_title="WhoFundedIt"
 )
-
-# app_ui = ui.page_fluid(
-#
-#     ui.panel_well(
-#         ui.h2("Test a single DOI:"),
-#         # ui code for inputting single DOI in text box
-#         ui.input_text_area("single_doi", "DOI Input", placeholder="Enter text"),
-#         # ui code to display funder list from single DOI
-#         ui.output_text_verbatim("single_doi_funder_list")
-#     ),
-#
-#     ui.panel_well(
-#         ui.h2("Upload a DOI file:"),
-#
-#         # ui code for uploading file
-#         ui.input_file("user_file", "Choose a file to upload:", multiple=False),
-#         ui.input_radio_buttons("type", "Type:", ["Text", "Other"]),
-#
-#         # ui code to display file content
-#         ui_card(
-#             "Uploaded file contents:",
-#             ui.output_text_verbatim("user_file_content")
-#         ),
-#
-#         # ui code to display funder information for DOI file
-#         ui_card(
-#             "Funder list:",
-#             ui.output_text_verbatim("user_file_funder_list")
-#         ),
-#
-#         # ui code for download funder list in .txt file
-#         ui_card(
-#             "Download funder list:",
-#             ui.download_button("download_funder_list_file", "Download")
-#         )
-#     ),
-#
-#     ui.panel_well(
-#         ui.h2("Aggregate outputs:"),
-#         ui_card(
-#             "Python dictionary count of funders:",
-#             # ui code to display funder count dictionary
-#             ui.output_text_verbatim("funder_count_dictionary")
-#         ),
-#
-#         ui_card(
-#             "Plot of funders:",
-#             ui.output_plot("funder_plot", width="100%", height="600px")
-#         )
-#     ),
-#
-#     # Available themes:
-#     #  cerulean, cosmo, cyborg, darkly, flatly, journal, litera, lumen, lux,
-#     #  materia, minty, morph, pulse, quartz, sandstone, simplex, sketchy, slate,
-#     #  solar, spacelab, superhero, united, vapor, yeti, zephyr
-#     theme=shinyswatch.theme.pulse()
-# )
-
 
 app = App(app_ui, server, debug=False)

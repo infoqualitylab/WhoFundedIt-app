@@ -4,11 +4,11 @@ import requests
 import re
 import numpy as np
 import pandas as pd
-from collections import Counter
+from collections import Counter, OrderedDict
 from matplotlib import pyplot as plt, ticker
 
 
-def read_input_file(filename: str):
+def crossref_read_input_file(filename: str):
     """
     Reads an input text file and returns it as a list.
 
@@ -23,7 +23,7 @@ def read_input_file(filename: str):
     return input_list
 
 
-def clean_input_list(input_list: list):
+def crossref_clean_input_list(input_list: list):
     """
     Cleans common errors in input list to get DOIs in format "https://doi.org/10.XXX/XXX" or "doi:10.XXXX/XXX",
     removing duplicates.
@@ -167,6 +167,8 @@ def query_crossref(cleaned_input_list: list):
                 grant_dictionary[funder_doi] = [grant]
             elif funder_doi and not grant:
                 grant_dictionary[funder_doi] = ['NA']
+            elif not funder_doi and grant:
+                grant_dictionary[f'No funder DOI {no_funder_doi_count}'] = [grant]
             else:
                 grant_dictionary[f'No funder DOI {no_funder_doi_count}'] = ['NA']
             nested_list_of_grants.append(grant_dictionary)
@@ -244,7 +246,8 @@ def create_name_chart(detailed_name_list: list, broad_name_list: list, name_none
     # )
 
     broad_name_frequency = Counter(broad_name_list)
-    sorted_broad_name_frequency = dict(sorted(broad_name_frequency.items(), key=lambda x: (x[1], x[0]), reverse=True))
+    sorted_broad_name_frequency = (sorted(broad_name_frequency.items(), key=lambda x: (x[1], x[0]), reverse=True))
+    sorted_broad_name_frequency = OrderedDict(sorted_broad_name_frequency)
 
     label_list = []
     alphabet_list = []
@@ -259,26 +262,26 @@ def create_name_chart(detailed_name_list: list, broad_name_list: list, name_none
     fig_width = max(6.0, len(sorted_broad_name_frequency) * 0.5)
     fig_height = fig_width
 
-    fig1, ax1 = plt.subplots(figsize=(fig_width, fig_height), layout="constrained")
-    ax1.barh(sorted_broad_name_frequency.keys(),
-             sorted_broad_name_frequency.values(),
+    fig1, ax1 = plt.subplots(figsize=(fig_width, fig_height), layout="tight")
+    ax1.barh(list(reversed(sorted_broad_name_frequency.keys())),
+             list(reversed(sorted_broad_name_frequency.values())),
              color=plt.cm.viridis(np.linspace(0, 1, len(sorted_broad_name_frequency.values()))),
-             label=label_list,
-             tick_label=alphabet_list
+             label=label_list[::-1],
+             tick_label=alphabet_list[::-1]
              )
     ax1.set_title("Frequency of Funders (Broad)")
     ax1.set_ylabel("Broad Funder Name")
     ax1.set_xlabel("Frequency")
     ax1.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-    ax1.legend(reverse=True, loc='upper right', framealpha=1, fontsize='x-small')
+    ax1.legend(reverse=True, bbox_to_anchor=(1, 1), loc="upper left", framealpha=1, fontsize='x-small')
     # ax1.tick_params(axis='x', labelrotation=45)
     ax1.bar_label(ax1.containers[0], label_type='edge', padding=0.5)
     # plt.show()
 
-    fig2, ax2 = plt.subplots(figsize=(fig_width, fig_height), layout="constrained")
+    fig2, ax2 = plt.subplots(figsize=(fig_width, fig_height), layout="tight")
     ax2.set_title("Frequency of Funders (Broad)")
     ax2.pie(sorted_broad_name_frequency.values(), labels=alphabet_list, autopct='%1.1f%%')
-    plt.legend(labels=label_list, loc='upper right')
+    plt.legend(labels=label_list, bbox_to_anchor=(1, 1), loc="upper left", fontsize='x-small')
     # plt.show()
 
     return fig1, fig2, sorted_broad_name_frequency, name_none_list
@@ -316,7 +319,8 @@ def create_country_chart(country_list: list, country_none_list: list):
     and list of items with type none
     """
     country_frequency = Counter(country_list)
-    sorted_country_frequency = dict(sorted(country_frequency.items(), key=lambda x: (x[1], x[0]), reverse=True))
+    sorted_country_frequency = sorted(country_frequency.items(), key=lambda x: (x[1], x[0]), reverse=True)
+    sorted_country_frequency = OrderedDict(sorted_country_frequency)
 
     label_list = []
     alphabet_list = []
@@ -331,12 +335,12 @@ def create_country_chart(country_list: list, country_none_list: list):
     fig_width = max(6.0, len(sorted_country_frequency) * 0.5)
     fig_height = fig_width
 
-    fig3, ax3 = plt.subplots(figsize=(fig_width, fig_height), layout="constrained")
-    ax3.barh(sorted_country_frequency.keys(),
-             sorted_country_frequency.values(),
+    fig3, ax3 = plt.subplots(figsize=(fig_width, fig_height), layout="tight")
+    ax3.barh(list(reversed(sorted_country_frequency.keys())),
+             list(reversed(sorted_country_frequency.values())),
              color=plt.cm.viridis(np.linspace(0, 1, len(sorted_country_frequency.values()))),
-             label=label_list,
-             tick_label=alphabet_list
+             label=label_list[::-1],
+             tick_label=alphabet_list[::-1]
              )
     ax3.set_title("Funder Countries")
     plt.figtext(0.01,
@@ -348,12 +352,12 @@ def create_country_chart(country_list: list, country_none_list: list):
     ax3.set_ylabel("Funder Country")
     ax3.set_xlabel("Frequency")
     ax3.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-    ax3.legend(reverse=True, loc='upper right', framealpha=1, fontsize='x-small')
+    ax3.legend(reverse=True, bbox_to_anchor=(1, 1), loc="upper left", framealpha=1, fontsize='x-small')
     # ax1.tick_params(axis='x', labelrotation=45)
     ax3.bar_label(ax3.containers[0], label_type='edge', padding=0.5)
     # plt.show()
 
-    fig4, ax4 = plt.subplots(figsize=(fig_width, fig_height), layout="constrained")
+    fig4, ax4 = plt.subplots(figsize=(fig_width, fig_height), layout="tight")
     ax4.set_title("Funder Countries")
     plt.figtext(0.01,
                 0.01,
@@ -362,7 +366,7 @@ def create_country_chart(country_list: list, country_none_list: list):
                 horizontalalignment='left',
                 size='x-small')
     ax4.pie(sorted_country_frequency.values(), labels=alphabet_list, autopct='%1.1f%%')
-    plt.legend(labels=label_list, loc='upper right')
+    plt.legend(labels=label_list, bbox_to_anchor=(1, 1), loc="upper left")
     # plt.show()
 
     return fig3, fig4, sorted_country_frequency, country_none_list
@@ -400,6 +404,7 @@ def create_funding_type_chart(type_list: list, type_none_list: list):
     """
     type_frequency = Counter(type_list)
     sorted_type_frequency = dict(sorted(type_frequency.items(), key=lambda x: (x[1], x[0]), reverse=True))
+    sorted_type_frequency = OrderedDict(sorted_type_frequency)
 
     label_list = []
     alphabet_list = []
@@ -414,12 +419,12 @@ def create_funding_type_chart(type_list: list, type_none_list: list):
     fig_width = max(6.0, len(sorted_type_frequency) * 0.5)
     fig_height = fig_width
 
-    fig5, ax5 = plt.subplots(figsize=(fig_width, fig_height), layout="constrained")
-    ax5.barh(sorted_type_frequency.keys(),
-             sorted_type_frequency.values(),
+    fig5, ax5 = plt.subplots(figsize=(fig_width, fig_height), layout="tight")
+    ax5.barh(list(reversed(sorted_type_frequency.keys())),
+             list(reversed(sorted_type_frequency.values())),
              color=plt.cm.viridis(np.linspace(0, 1, len(sorted_type_frequency.values()))),
-             label=label_list,
-             tick_label=alphabet_list
+             label=label_list[::-1],
+             tick_label=alphabet_list[::-1]
              )
     ax5.set_title("Types of Funding Bodies")
     plt.figtext(0.01,
@@ -431,12 +436,12 @@ def create_funding_type_chart(type_list: list, type_none_list: list):
     ax5.set_ylabel("Funder Type")
     ax5.set_xlabel("Frequency")
     ax5.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-    ax5.legend(reverse=True, loc='upper right', framealpha=1, fontsize='x-small')
+    ax5.legend(reverse=True, bbox_to_anchor=(1, 1), loc="upper left", framealpha=1, fontsize='x-small')
     # ax1.tick_params(axis='x', labelrotation=45)
     ax5.bar_label(ax5.containers[0], label_type='edge', padding=0.5)
     # plt.show()
 
-    fig6, ax6 = plt.subplots(figsize=(fig_width, fig_height), layout="constrained")
+    fig6, ax6 = plt.subplots(figsize=(fig_width, fig_height), layout="tight")
     ax6.set_title("Types of Funding Bodies")
     plt.figtext(0.01,
                 0.01,
@@ -445,16 +450,16 @@ def create_funding_type_chart(type_list: list, type_none_list: list):
                 horizontalalignment='left',
                 size='x-small')
     ax6.pie(sorted_type_frequency.values(), labels=alphabet_list, autopct='%1.1f%%')
-    plt.legend(labels=label_list, loc='upper right')
+    plt.legend(labels=label_list, bbox_to_anchor=(1, 1), loc="upper left",)
     # plt.show()
 
     return fig5, fig6, sorted_type_frequency, type_none_list
 
 
-def create_summary_table(nested_detailed_funder_dictionary: dict,
-                         nested_funding_body_type_dictionary: dict,
-                         nested_countries_dictionary: dict,
-                         nested_grant_dictionary: dict):
+def crossref_create_item_to_funder_table(nested_detailed_funder_dictionary: dict,
+                                nested_funding_body_type_dictionary: dict,
+                                nested_countries_dictionary: dict,
+                                nested_grant_dictionary: dict):
     """
 
     :param nested_detailed_funder_dictionary:
@@ -470,29 +475,52 @@ def create_summary_table(nested_detailed_funder_dictionary: dict,
             }
 
     # Flatten the nested dictionary and create a DataFrame
-    df = pd.DataFrame.from_dict({(level1, level2, level3): value
-                                 for level1, inner_dict in data.items()
-                                 for level2, inner_inner_dict_list in inner_dict.items()
-                                 for dictionary_item in inner_inner_dict_list
-                                 for level3, value in dictionary_item.items()}, orient='index')
+    df = pd.DataFrame.from_dict({(level1, level2, level3, np.random.randint(low=0, high=5000)): value
+                                 for level1, level2_dict in data.items()
+                                 for level2, level3_dict_list in level2_dict.items()
+                                 for level3_dict_item in level3_dict_list
+                                 for level3, value in level3_dict_item.items()}, orient='index')
 
     # Set MultiIndex
     df.index = pd.MultiIndex.from_tuples(df.index)
 
     # Combine names list across multiple columns into one column
     df['values'] = df.agg(lambda x: ', '.join(x.dropna().astype(str)), axis=1)
+    # Drop multiple unneeded columns
     df = df['values']
 
     # Reset index to flatten indexing levels and rename to legible column names
     df = df.reset_index()
     df.rename(columns={'level_0': 'Available funder information',
                        'level_1': 'Original work identifier',
-                       'level_2': 'Funder identifier'}, inplace=True)
+                       'level_2': 'Funder identifier',
+                       'level_3': 'Arbitrary value to prevent overwriting duplicates'}, inplace=True)
+
     df = pd.pivot(df,
-                  index=['Original work identifier', 'Funder identifier'],
+                  index=['Original work identifier',
+                         'Funder identifier',
+                         'Arbitrary value to prevent overwriting duplicates'],
                   columns='Available funder information',
                   values='values')
-    df = df[['Funder name', 'Grant', 'Funding body type', 'Country']]
+
+    # Reset index again to address duplicate funder DOIs/combine grant information
+    df = df.reset_index()
+
+    # Use transform to combine info for duplicated funder DOIs
+    df = df.groupby(['Original work identifier', 'Funder identifier'], dropna=True, as_index=True)[[
+        'Original work identifier', 'Funder identifier', 'Funder name', 'Grant', 'Funding body type', 'Country'
+    ]].transform(lambda x: ', '.join(x.dropna().astype(str))).drop_duplicates()
+
+    # Leave only grant column with additional information
+    columns_with_duplicated_info = ['Original work identifier',
+                                    'Funder identifier',
+                                    'Funding body type',
+                                    'Country']
+    for column in columns_with_duplicated_info:
+        df[column] = df[column].apply(lambda x: x.split(',')[0])
+
+    # reset multiindex
+    df.set_index(['Original work identifier', 'Funder identifier'], inplace=True)
 
     # Display the resulting DataFrame
     # print(df)
@@ -500,15 +528,106 @@ def create_summary_table(nested_detailed_funder_dictionary: dict,
     return df
 
 
+def crossref_create_funder_to_item_table(nested_detailed_funder_dictionary: dict,
+                                nested_funding_body_type_dictionary: dict,
+                                nested_countries_dictionary: dict,
+                                nested_grant_dictionary: dict):
+    """
+
+    :param nested_detailed_funder_dictionary:
+    :param nested_funding_body_type_dictionary:
+    :param nested_countries_dictionary:
+    :param nested_grant_dictionary:
+    :return:
+    """
+    data = {'Funder name': nested_detailed_funder_dictionary,
+            'Funding body type': nested_funding_body_type_dictionary,
+            'Country': nested_countries_dictionary,
+            'Grant': nested_grant_dictionary
+            }
+
+    # Flatten the nested dictionary and create a DataFrame
+    df = pd.DataFrame.from_dict({(level1, level2, level3, np.random.randint(low=0, high=5000)): value
+                                 for level1, level2_dict in data.items()
+                                 for level2, level3_dict_list in level2_dict.items()
+                                 for level3_dict_item in level3_dict_list
+                                 for level3, value in level3_dict_item.items()}, orient='index')
+
+    # Set MultiIndex
+    df.index = pd.MultiIndex.from_tuples(df.index)
+
+    # Flatten names list across multiple columns into one column
+    df['values'] = df.agg(lambda x: ', '.join(x.dropna().astype(str)), axis=1)
+    df = df['values']
+
+    # Reset index to flatten indexing levels and rename to legible column names
+    df = df.reset_index()
+
+    df.rename(columns={'level_0': 'Available funder information',
+                       'level_1': 'Original work identifier',
+                       'level_2': 'Funder identifier',
+                       'level_3': 'Arbitrary value to prevent overwriting duplicates'}, inplace=True)
+
+    # Pivot to bring available funder information into columns
+    df = pd.pivot(df,
+                  index=['Funder identifier',
+                         'Original work identifier',
+                         'Arbitrary value to prevent overwriting duplicates'],
+                  columns=['Available funder information'],
+                  values='values')
+
+    # Reset index again to address duplicate funder DOIs/combine grant information
+    df = df.reset_index()
+
+    # Use transform to combine info for duplicated funder DOIs
+    df = df.groupby(['Funder identifier', 'Original work identifier'], dropna=True, as_index=True)[[
+        'Original work identifier', 'Funder identifier', 'Funder name', 'Grant', 'Funding body type', 'Country'
+    ]].transform(lambda x: ', '.join(x.dropna().astype(str))).drop_duplicates()
+
+    # Leave only grant column with additional information
+    columns_with_duplicated_info = ['Original work identifier',
+                                    'Funder identifier',
+                                    'Funding body type',
+                                    'Country']
+    for column in columns_with_duplicated_info:
+        df[column] = df[column].apply(lambda x: x.split(',')[0])
+
+    # Add overall funder name and rename specific funder name column
+    df["Overall funder name"] = df['Funder name'].str.split(',').str[0].str.strip()
+    df.rename(columns={'Funder name': 'Specific funder name'}, inplace=True)
+
+    # Add overall funder name to indexing
+    df = df.reset_index()
+    df.set_index(['Overall funder name', 'Funder identifier', 'Original work identifier'], inplace=True)
+    df.sort_index(inplace=True)
+    df.drop('index', axis=1, inplace=True)
+
+    # Display the resulting DataFrame
+    # print(df)
+
+    # Create summary table of counts
+    summary_df = df.groupby(level=[0, 2]).size().to_frame(name="Count of times funder is listed for a work")
+    # print(summary_df)
+
+    return df, summary_df
+
+
 def main():
-    # query_crossref(['10.1145/2566486.2568023'])
+    # (identifier_with_error_list,
+    #  identifier_with_no_funder_list,
+    #  bottom_level_funder_dictionary,
+    #  nested_detailed_funder_dictionary,
+    #  nested_funding_body_type_dictionary,
+    #  nested_countries_dictionary,
+    #  nested_grant_dictionary) = query_crossref(['10.7554/ELIFE.65902'])
+
     (identifier_with_error_list,
      identifier_with_no_funder_list,
      bottom_level_funder_dictionary,
      nested_detailed_funder_dictionary,
      nested_funding_body_type_dictionary,
      nested_countries_dictionary,
-     nested_grant_dictionary) = query_crossref(clean_input_list(read_input_file("data/COVID-WFI-example.txt")))
+     nested_grant_dictionary) = query_crossref(crossref_clean_input_list(crossref_read_input_file("data/COVID-WFI-example.txt")))
 
     detailed_name_list, broad_name_list, name_none_list = create_name_list(nested_detailed_funder_dictionary)
     country_list, country_none_list = create_country_list(nested_countries_dictionary)
@@ -531,10 +650,15 @@ def main():
     fig5.show()
     fig6.show()
 
-    df = create_summary_table(nested_detailed_funder_dictionary,
-                              nested_funding_body_type_dictionary,
-                              nested_countries_dictionary,
-                              nested_grant_dictionary)
+    df = crossref_create_item_to_funder_table(nested_detailed_funder_dictionary,
+                                     nested_funding_body_type_dictionary,
+                                     nested_countries_dictionary,
+                                     nested_grant_dictionary)
+
+    df2 = crossref_create_funder_to_item_table(nested_detailed_funder_dictionary,
+                                      nested_funding_body_type_dictionary,
+                                      nested_countries_dictionary,
+                                      nested_grant_dictionary)
 
 
 if __name__ == "__main__":
