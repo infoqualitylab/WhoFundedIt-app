@@ -4,7 +4,8 @@
 This app retrieves funder names and other funder information (grant, country, funding body type) for a list of 
 publications based on their Digital Object Identifiers (DOIs) using the Crossref API. It also retrieves sponsor name and class
 for a list of publications based on their National Clinical Trial Identifiers (NCTIDs) using the ClinicalTrials.gov API.
-The input can be either a text box entry or a .txt file. 
+The input can be either a text box entry or a .txt file. To view the live website version of this app, go to:
+https://corinnemc-whofundedit-app.share.connect.posit.cloud/
 
 ## Setup
 Follow these steps to set up the code
