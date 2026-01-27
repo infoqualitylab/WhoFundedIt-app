@@ -4,8 +4,10 @@ import requests
 import re
 import numpy as np
 import pandas as pd
+import plotly.graph_objects as go
+import plotly.express as px
+import pycountry
 from collections import Counter, OrderedDict
-from matplotlib import pyplot as plt, ticker
 
 
 def crossref_read_input_file(filename: str):
@@ -89,6 +91,8 @@ def retrieve_broader_data(funder_identifier):
             cycles += 1
 
         broader_data = result.get("broader", {})
+        print(f'funder identifier: {funder_identifier}')
+        print(f'broader data: {broader_data}')
         if broader_data:
             url = broader_data["resource"]
             # print("Broader Funding Data:", url)
@@ -195,17 +199,6 @@ def query_crossref(cleaned_input_list: list):
             nested_grant_dictionary)
 
 
-def create_alphabet_tick_labels():
-    alphabet = string.ascii_letters
-    alphabet_tick_labels_list = []
-    for i in range(len(alphabet)):
-        alphabet_tick_labels_list.append(alphabet[i])
-    for j in range(len(alphabet)):
-        for k in range(len(alphabet)):
-            alphabet_tick_labels_list.append(alphabet[j] + alphabet[k])
-    return alphabet_tick_labels_list
-
-
 def create_name_list(nested_detailed_funder_dictionary: dict):
     """
     Creates a list of detailed funder names, broad funder names, and funders with no name listed
@@ -249,40 +242,45 @@ def create_name_chart(detailed_name_list: list, broad_name_list: list, name_none
     sorted_broad_name_frequency = (sorted(broad_name_frequency.items(), key=lambda x: (x[1], x[0]), reverse=True))
     sorted_broad_name_frequency = OrderedDict(sorted_broad_name_frequency)
 
-    label_list = []
-    alphabet_list = []
-    alphabet = create_alphabet_tick_labels()
-    count = 0
-    for key in sorted_broad_name_frequency.keys():
-        label = f"{alphabet[count]} {key}"
-        label_list.append(label)
-        alphabet_list.append(alphabet[count])
-        count += 1
+    data = pd.DataFrame.from_dict(sorted_broad_name_frequency, orient='index')
+    data.reset_index(inplace=True)
+    data.rename(columns={'index': 'broad_name', 0:'frequency'}, inplace=True)
+    data.sort_values(by='frequency', ascending=False, inplace=True)
 
-    fig_width = max(6.0, len(sorted_broad_name_frequency) * 0.5)
-    fig_height = fig_width
+    fig1 = go.Figure(go.Bar(
+        x=data.frequency,
+        y=data.broad_name,
+        orientation='h',
+        hovertemplate="Funder: %{y}<br>Frequency: %{x}",
+        hoverlabel = dict(namelength=0),
+        marker=dict(
+            color=data.frequency,
+            colorscale="viridis",
+            showscale=True,
+            colorbar=dict(title="Frequency"),
+        )
+    ))
+    fig1.update_layout(title="Frequency of Funders (Broad)",
+                       xaxis_title="Frequency",
+                       yaxis_title="Broad Funder Name",
+                       template="plotly_white",
+                       yaxis={'categoryorder': 'total ascending'},
+                       autosize=True,
+                       )
+    fig1.update_traces(textposition='inside')
+    fig1.update_layout(uniformtext_minsize=12, uniformtext_mode='hide')
+    fig1.for_each_yaxis(lambda axis: axis.update(title=None))
 
-    fig1, ax1 = plt.subplots(figsize=(fig_width, fig_height), layout="tight")
-    ax1.barh(list(reversed(sorted_broad_name_frequency.keys())),
-             list(reversed(sorted_broad_name_frequency.values())),
-             color=plt.cm.viridis(np.linspace(0, 1, len(sorted_broad_name_frequency.values()))),
-             label=label_list[::-1],
-             tick_label=alphabet_list[::-1]
-             )
-    ax1.set_title("Frequency of Funders (Broad)")
-    ax1.set_ylabel("Broad Funder Name")
-    ax1.set_xlabel("Frequency")
-    ax1.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-    ax1.legend(reverse=True, bbox_to_anchor=(1, 1), loc="upper left", framealpha=1, fontsize='x-small')
-    # ax1.tick_params(axis='x', labelrotation=45)
-    ax1.bar_label(ax1.containers[0], label_type='edge', padding=0.5)
-    # plt.show()
-
-    fig2, ax2 = plt.subplots(figsize=(fig_width, fig_height), layout="tight")
-    ax2.set_title("Frequency of Funders (Broad)")
-    ax2.pie(sorted_broad_name_frequency.values(), labels=alphabet_list, autopct='%1.1f%%')
-    plt.legend(labels=label_list, bbox_to_anchor=(1, 1), loc="upper left", fontsize='x-small')
-    # plt.show()
+    fig2 = px.pie(
+        data_frame=data,
+        values='frequency',
+        names='broad_name',
+        title="Frequency of Funders (Broad)",
+        color_discrete_sequence=px.colors.qualitative.Bold,
+        labels={'frequency': 'Frequency', 'broad_name': 'Broad Funder'},
+    )
+    fig2.update_traces(textposition='inside')
+    fig2.update_layout(uniformtext_minsize=12, uniformtext_mode='hide')
 
     return fig1, fig2, sorted_broad_name_frequency, name_none_list
 
@@ -293,8 +291,9 @@ def create_country_list(nested_countries_dictionary: dict):
     :param nested_countries_dictionary: nested dictionaries containing funder countries
     :return: detailed country list and list of funder DOIs with "None" for country.
     """
-    country_list = []
+    country_code_list = []
     country_none_list = []
+    country_list = []
     for doi_key, response_value in nested_countries_dictionary.items():
         if response_value is None:
             country_none_list.append(doi_key)
@@ -305,7 +304,15 @@ def create_country_list(nested_countries_dictionary: dict):
                         if country == 'NA':
                             country_none_list.append(funder_doi)
                         else:
-                            country_list.append(country)
+                            country_code_list.append(country)
+
+    for code in country_code_list:
+        country_object = pycountry.countries.get(alpha_3=f'{code.upper().strip()}')
+        if country_object is None:
+            country_name = code.upper()
+        else:
+            country_name = country_object.name
+        country_list.append(country_name)
 
     return country_list, country_none_list
 
@@ -322,52 +329,55 @@ def create_country_chart(country_list: list, country_none_list: list):
     sorted_country_frequency = sorted(country_frequency.items(), key=lambda x: (x[1], x[0]), reverse=True)
     sorted_country_frequency = OrderedDict(sorted_country_frequency)
 
-    label_list = []
-    alphabet_list = []
-    alphabet = create_alphabet_tick_labels()
-    count = 0
-    for key in sorted_country_frequency.keys():
-        label = f"{alphabet[count]} {key}"
-        label_list.append(label)
-        alphabet_list.append(alphabet[count])
-        count += 1
+    data = pd.DataFrame.from_dict(sorted_country_frequency, orient='index')
+    data.reset_index(inplace=True)
+    data.rename(columns={'index': 'country', 0: 'frequency'}, inplace=True)
+    data.sort_values(by='frequency', ascending=False, inplace=True)
 
-    fig_width = max(6.0, len(sorted_country_frequency) * 0.5)
-    fig_height = fig_width
+    fig3 = go.Figure(go.Bar(
+        x=data.frequency,
+        y=data.country,
+        orientation='h',
+        hovertemplate="Country: %{y}<br>Frequency: %{x}",
+        hoverlabel=dict(namelength=0),
+        marker=dict(
+            color=data.frequency,
+            colorscale="viridis",
+            showscale=True,
+            colorbar=dict(title="Frequency"),
+        )
+    ))
+    fig3.update_layout(title="Funder Countries",
+                       xaxis_title="Frequency",
+                       yaxis_title="Funder Country",
+                       template="plotly_white",
+                       yaxis={'categoryorder': 'total ascending'},
+                       autosize=True,
+                       )
+    fig3.update_traces(textposition='inside')
+    fig3.update_layout(uniformtext_minsize=12, uniformtext_mode='hide')
+    fig3.for_each_yaxis(lambda axis: axis.update(title=None))
+    fig3.add_annotation(x=0.95, y=-0.1,
+                        xref='paper', yref='paper',
+                        text=f'Excludes {len(country_none_list)} funders with None value '
+                             f'out of {len(country_none_list) + len(country_list)} total funders',
+                        showarrow=False,)
 
-    fig3, ax3 = plt.subplots(figsize=(fig_width, fig_height), layout="tight")
-    ax3.barh(list(reversed(sorted_country_frequency.keys())),
-             list(reversed(sorted_country_frequency.values())),
-             color=plt.cm.viridis(np.linspace(0, 1, len(sorted_country_frequency.values()))),
-             label=label_list[::-1],
-             tick_label=alphabet_list[::-1]
-             )
-    ax3.set_title("Funder Countries")
-    plt.figtext(0.01,
-                0.01,
-                f'Excludes {len(country_none_list)} funders with None value '
-                f'out of {len(country_none_list) + len(country_list)} total funders',
-                horizontalalignment='left',
-                size='x-small')
-    ax3.set_ylabel("Funder Country")
-    ax3.set_xlabel("Frequency")
-    ax3.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-    ax3.legend(reverse=True, bbox_to_anchor=(1, 1), loc="upper left", framealpha=1, fontsize='x-small')
-    # ax1.tick_params(axis='x', labelrotation=45)
-    ax3.bar_label(ax3.containers[0], label_type='edge', padding=0.5)
-    # plt.show()
-
-    fig4, ax4 = plt.subplots(figsize=(fig_width, fig_height), layout="tight")
-    ax4.set_title("Funder Countries")
-    plt.figtext(0.01,
-                0.01,
-                f'Excludes {len(country_none_list)} funders with None value '
-                f'out of {len(country_none_list) + len(country_list)} total funders',
-                horizontalalignment='left',
-                size='x-small')
-    ax4.pie(sorted_country_frequency.values(), labels=alphabet_list, autopct='%1.1f%%')
-    plt.legend(labels=label_list, bbox_to_anchor=(1, 1), loc="upper left")
-    # plt.show()
+    fig4 = px.pie(
+        data_frame=data,
+        values='frequency',
+        names='country',
+        title="Funder Countries",
+        color_discrete_sequence=px.colors.qualitative.Bold,
+        labels={'frequency': 'Frequency', 'country': 'Country'},
+    )
+    fig4.update_traces(textposition='inside')
+    fig4.update_layout(uniformtext_minsize=12, uniformtext_mode='hide')
+    fig4.add_annotation(x=0.95, y=-0.1,
+                        xref='paper', yref='paper',
+                        text=f'Excludes {len(country_none_list)} funders with None value '
+                             f'out of {len(country_none_list) + len(country_list)} total funders',
+                        showarrow=False,)
 
     return fig3, fig4, sorted_country_frequency, country_none_list
 
@@ -406,52 +416,55 @@ def create_funding_type_chart(type_list: list, type_none_list: list):
     sorted_type_frequency = dict(sorted(type_frequency.items(), key=lambda x: (x[1], x[0]), reverse=True))
     sorted_type_frequency = OrderedDict(sorted_type_frequency)
 
-    label_list = []
-    alphabet_list = []
-    alphabet = create_alphabet_tick_labels()
-    count = 0
-    for key in sorted_type_frequency.keys():
-        label = f"{alphabet[count]} {key}"
-        label_list.append(label)
-        alphabet_list.append(alphabet[count])
-        count += 1
+    data = pd.DataFrame.from_dict(sorted_type_frequency, orient='index')
+    data.reset_index(inplace=True)
+    data.rename(columns={'index': 'type', 0: 'frequency'}, inplace=True)
+    data.sort_values(by='frequency', ascending=False, inplace=True)
 
-    fig_width = max(6.0, len(sorted_type_frequency) * 0.5)
-    fig_height = fig_width
+    fig5 = go.Figure(go.Bar(
+        x=data.frequency,
+        y=data.type,
+        orientation='h',
+        hovertemplate="Funder Type: %{y}<br>Frequency: %{x}",
+        hoverlabel=dict(namelength=0),
+        marker=dict(
+            color=data.frequency,
+            colorscale="viridis",
+            showscale=True,
+            colorbar=dict(title="Frequency"),
+        )
+    ))
+    fig5.update_layout(title="Funder Types",
+                       xaxis_title="Frequency",
+                       yaxis_title="Funder Type",
+                       template="plotly_white",
+                       yaxis={'categoryorder': 'total ascending'},
+                       autosize=True,
+                       )
+    fig5.update_traces(textposition='inside')
+    fig5.update_layout(uniformtext_minsize=12, uniformtext_mode='hide')
+    fig5.for_each_yaxis(lambda axis: axis.update(title=None))
+    fig5.add_annotation(x=0.95, y=-0.1,
+                        xref='paper', yref='paper',
+                        text=f'Excludes {len(type_none_list)} funders with None value '
+                             f'out of {len(type_none_list) + len(type_list)} total funders',
+                        showarrow=False, )
 
-    fig5, ax5 = plt.subplots(figsize=(fig_width, fig_height), layout="tight")
-    ax5.barh(list(reversed(sorted_type_frequency.keys())),
-             list(reversed(sorted_type_frequency.values())),
-             color=plt.cm.viridis(np.linspace(0, 1, len(sorted_type_frequency.values()))),
-             label=label_list[::-1],
-             tick_label=alphabet_list[::-1]
-             )
-    ax5.set_title("Types of Funding Bodies")
-    plt.figtext(0.01,
-                0.01,
-                f'Excludes {len(type_none_list)} funders with None value '
-                f'out of {len(type_none_list) + len(type_list)} total funders',
-                horizontalalignment='left',
-                size='x-small')
-    ax5.set_ylabel("Funder Type")
-    ax5.set_xlabel("Frequency")
-    ax5.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-    ax5.legend(reverse=True, bbox_to_anchor=(1, 1), loc="upper left", framealpha=1, fontsize='x-small')
-    # ax1.tick_params(axis='x', labelrotation=45)
-    ax5.bar_label(ax5.containers[0], label_type='edge', padding=0.5)
-    # plt.show()
-
-    fig6, ax6 = plt.subplots(figsize=(fig_width, fig_height), layout="tight")
-    ax6.set_title("Types of Funding Bodies")
-    plt.figtext(0.01,
-                0.01,
-                f'Excludes {len(type_none_list)} funders with None value '
-                f'out of {len(type_none_list) + len(type_list)} total funders',
-                horizontalalignment='left',
-                size='x-small')
-    ax6.pie(sorted_type_frequency.values(), labels=alphabet_list, autopct='%1.1f%%')
-    plt.legend(labels=label_list, bbox_to_anchor=(1, 1), loc="upper left",)
-    # plt.show()
+    fig6 = px.pie(
+        data_frame=data,
+        values='frequency',
+        names='type',
+        title="Funder Types",
+        color_discrete_sequence=px.colors.qualitative.Bold,
+        labels={'frequency': 'Frequency', 'type': 'Funder Type'},
+    )
+    fig6.update_traces(textposition='inside')
+    fig6.update_layout(uniformtext_minsize=12, uniformtext_mode='hide')
+    fig6.add_annotation(x=0.95, y=-0.1,
+                        xref='paper', yref='paper',
+                        text=f'Excludes {len(type_none_list)} funders with None value '
+                             f'out of {len(type_none_list) + len(type_list)} total funders',
+                        showarrow=False, )
 
     return fig5, fig6, sorted_type_frequency, type_none_list
 

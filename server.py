@@ -1,4 +1,5 @@
 from shiny import render, reactive, ui
+from shinywidgets import output_widget, render_widget
 from query_crossref import *
 from query_clinicaltrials import *
 import matplotlib.pyplot as plt
@@ -135,12 +136,12 @@ def server(input, output, session):
                 "fig2": fig2}
 
     @output
-    @render.plot
+    @render_widget
     def crossref_funder_name():
         return crossref_funder_name_calculations()['fig1']
 
     @output
-    @render.plot
+    @render_widget
     def crossref_funder_name_pie():
         return crossref_funder_name_calculations()['fig2']
 
@@ -158,12 +159,12 @@ def server(input, output, session):
                 'fig6': fig6}
 
     @output
-    @render.plot
+    @render_widget
     def crossref_funding_body_type():
         return crossref_funder_body_type_calculations()['fig5']
 
     @output
-    @render.plot
+    @render_widget
     def crossref_funding_body_type_pie():
         return crossref_funder_body_type_calculations()['fig6']
 
@@ -181,12 +182,12 @@ def server(input, output, session):
                 'fig4': fig4}
 
     @output
-    @render.plot
+    @render_widget
     def crossref_country():
         return crossref_country_calculations()['fig3']
 
     @output
-    @render.plot
+    @render_widget
     def crossref_country_pie():
         return crossref_country_calculations()['fig4']
 
