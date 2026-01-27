@@ -264,11 +264,11 @@ def create_name_chart(detailed_name_list: list, broad_name_list: list, name_none
                        xaxis_title="Frequency",
                        yaxis_title="Broad Funder Name",
                        template="plotly_white",
-                       yaxis={'categoryorder': 'total ascending'},
+                       yaxis={'categoryorder': 'total ascending', 'dtick': 1},
                        autosize=True,
+
                        )
     fig1.update_traces(textposition='inside')
-    fig1.update_layout(uniformtext_minsize=12, uniformtext_mode='hide')
     fig1.for_each_yaxis(lambda axis: axis.update(title=None))
 
     fig2 = px.pie(
@@ -280,7 +280,6 @@ def create_name_chart(detailed_name_list: list, broad_name_list: list, name_none
         labels={'frequency': 'Frequency', 'broad_name': 'Broad Funder'},
     )
     fig2.update_traces(textposition='inside')
-    fig2.update_layout(uniformtext_minsize=12, uniformtext_mode='hide')
 
     return fig1, fig2, sorted_broad_name_frequency, name_none_list
 
@@ -347,37 +346,29 @@ def create_country_chart(country_list: list, country_none_list: list):
             colorbar=dict(title="Frequency"),
         )
     ))
-    fig3.update_layout(title="Funder Countries",
+    fig3.update_layout(title=f"Funder Countries<br>"
+                             f"<sup>Excludes {len(country_none_list)} funders with None value "
+                             f"out of {len(country_none_list) + len(country_list)} total funders</sup>",
                        xaxis_title="Frequency",
                        yaxis_title="Funder Country",
                        template="plotly_white",
-                       yaxis={'categoryorder': 'total ascending'},
+                       yaxis={'categoryorder': 'total ascending', 'dtick': 1},
                        autosize=True,
                        )
     fig3.update_traces(textposition='inside')
-    fig3.update_layout(uniformtext_minsize=12, uniformtext_mode='hide')
     fig3.for_each_yaxis(lambda axis: axis.update(title=None))
-    fig3.add_annotation(x=0.95, y=-0.1,
-                        xref='paper', yref='paper',
-                        text=f'Excludes {len(country_none_list)} funders with None value '
-                             f'out of {len(country_none_list) + len(country_list)} total funders',
-                        showarrow=False,)
 
     fig4 = px.pie(
         data_frame=data,
         values='frequency',
         names='country',
-        title="Funder Countries",
+        title=f"Funder Countries<br>"
+              f"<sup>Excludes {len(country_none_list)} funders with None value "
+              f"out of {len(country_none_list) + len(country_list)} total funders</sup>",
         color_discrete_sequence=px.colors.qualitative.Bold,
         labels={'frequency': 'Frequency', 'country': 'Country'},
     )
     fig4.update_traces(textposition='inside')
-    fig4.update_layout(uniformtext_minsize=12, uniformtext_mode='hide')
-    fig4.add_annotation(x=0.95, y=-0.1,
-                        xref='paper', yref='paper',
-                        text=f'Excludes {len(country_none_list)} funders with None value '
-                             f'out of {len(country_none_list) + len(country_list)} total funders',
-                        showarrow=False,)
 
     return fig3, fig4, sorted_country_frequency, country_none_list
 
@@ -434,37 +425,29 @@ def create_funding_type_chart(type_list: list, type_none_list: list):
             colorbar=dict(title="Frequency"),
         )
     ))
-    fig5.update_layout(title="Funder Types",
+    fig5.update_layout(title=f"Funder Types<br>"
+                             f"<sup>Excludes {len(type_none_list)} funders with None value "
+                             f"out of {len(type_none_list) + len(type_list)} total funders</sup>",
                        xaxis_title="Frequency",
                        yaxis_title="Funder Type",
                        template="plotly_white",
-                       yaxis={'categoryorder': 'total ascending'},
+                       yaxis={'categoryorder': 'total ascending', 'dtick': 1},
                        autosize=True,
                        )
     fig5.update_traces(textposition='inside')
-    fig5.update_layout(uniformtext_minsize=12, uniformtext_mode='hide')
     fig5.for_each_yaxis(lambda axis: axis.update(title=None))
-    fig5.add_annotation(x=0.95, y=-0.1,
-                        xref='paper', yref='paper',
-                        text=f'Excludes {len(type_none_list)} funders with None value '
-                             f'out of {len(type_none_list) + len(type_list)} total funders',
-                        showarrow=False, )
 
     fig6 = px.pie(
         data_frame=data,
         values='frequency',
         names='type',
-        title="Funder Types",
+        title=f"Funder Types<br>"
+              f"<sup>Excludes {len(type_none_list)} funders with None value "
+              f"out of {len(type_none_list) + len(type_list)} total funders</sup>",
         color_discrete_sequence=px.colors.qualitative.Bold,
         labels={'frequency': 'Frequency', 'type': 'Funder Type'},
     )
     fig6.update_traces(textposition='inside')
-    fig6.update_layout(uniformtext_minsize=12, uniformtext_mode='hide')
-    fig6.add_annotation(x=0.95, y=-0.1,
-                        xref='paper', yref='paper',
-                        text=f'Excludes {len(type_none_list)} funders with None value '
-                             f'out of {len(type_none_list) + len(type_list)} total funders',
-                        showarrow=False, )
 
     return fig5, fig6, sorted_type_frequency, type_none_list
 
