@@ -9,6 +9,8 @@ import plotly.express as px
 import pycountry
 from collections import Counter, OrderedDict
 
+from htmltools import HTML
+
 
 def crossref_read_input_file(filename: str):
     """
@@ -45,8 +47,20 @@ def crossref_clean_input_list(input_list: list):
         elif re.search(r'^DOI: ', item):
             new_item = re.sub(r'DOI: ', '', item, 1)
             search_item = new_item
-        elif re.search(r'^doi.org', item):
+        elif re.search(r'^doi:', item):
+            new_item = re.sub(r'doi:', '', item, 1)
+            search_item = new_item
+        elif re.search(r'^doi: ', item):
+            new_item = re.sub(r'doi: ', '', item, 1)
+            search_item = new_item
+        elif re.search(r'^doi.org/', item):
             new_item = re.sub(r'doi.org/', '', item, 1)
+            search_item = new_item
+        elif re.search(r'^https://doi.org/', item):
+            new_item = re.sub(r'https://doi.org/', '', item, 1)
+            search_item = new_item
+        elif re.search(r'^http://doi.org/', item):
+            new_item = re.sub(r'http://doi.org/', '', item, 1)
             search_item = new_item
         else:
             search_item = item
@@ -515,8 +529,15 @@ def crossref_create_item_to_funder_table(nested_detailed_funder_dictionary: dict
     for column in columns_with_duplicated_info:
         df[column] = df[column].apply(lambda x: x.split(',')[0])
 
+    df['Original work identifier'] = df['Original work identifier'].apply(
+        lambda x:f'<a href="https://doi.org/{x}">{x}</a>')
+    df['Funder identifier'] = df['Funder identifier'].apply(
+        lambda x: f'<a href="https://doi.org/{x}">{x}</a>')
+
     # reset multiindex
     df.set_index(['Original work identifier', 'Funder identifier'], inplace=True)
+
+    HTML(df.to_html(escape=False))
 
     # Display the resulting DataFrame
     # print(df)
@@ -592,11 +613,19 @@ def crossref_create_funder_to_item_table(nested_detailed_funder_dictionary: dict
     df["Overall funder name"] = df['Funder name'].str.split(',').str[0].str.strip()
     df.rename(columns={'Funder name': 'Specific funder name'}, inplace=True)
 
+    # Add links to original work identifier and funder identifier
+    df['Original work identifier'] = df['Original work identifier'].apply(
+        lambda x:f'<a href="https://doi.org/{x}">{x}</a>')
+    df['Funder identifier'] = df['Funder identifier'].apply(
+        lambda x: f'<a href="https://doi.org/{x}">{x}</a>')
+
     # Add overall funder name to indexing
     df = df.reset_index()
     df.set_index(['Overall funder name', 'Funder identifier', 'Original work identifier'], inplace=True)
     df.sort_index(inplace=True)
     df.drop('index', axis=1, inplace=True)
+
+    HTML(df.to_html(escape=False))
 
     # Display the resulting DataFrame
     # print(df)
